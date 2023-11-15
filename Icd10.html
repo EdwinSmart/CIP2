@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #FFFFFF;
+      color: #000000;
+    }
+    h1 {
+      color: #0085CA;
+    }
+    label {
+      font-weight: bold;
+      color: #0085CA;
+    }
+    #searchInput {
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 2px solid #0085CA;
+      border-radius: 5px;
+    }
+    #resultsContainer {
+      margin-top: 10px;
+    }
+    .result {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #0085CA;
+      color: #FFFFFF;
+      border-radius: 5px;
+    }
+    .result h4 {
+      margin-top: 0;
+    }
+    .result p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>ICD 10 Disease Search</h1>
+  <label for="searchInput">Search Disease:</label>
+  <input type="text" id="searchInput" placeholder="Enter disease name">
+
+  <div id="resultsContainer">
+    <h3>Search Results:</h3>
+    <div id="searchResults"></div>
+  </div>
+
+  <script>
+    // JavaScript code
+    const diseases = [
+      {
+        name: "Infectious gastroenteritis and colitis, unspecified",
+        code: "A09",
+        category: "Certain infectious and parasitic diseases"
+      },
+      {
+        name: "Malignant neoplasm of bronchus and lung",
+        code: "C34",
+        category: "Neoplasms"
+      },
+      {
+        name: "Type 2 diabetes mellitus without complications",
+        code: "E11.9",
+        category: "Endocrine, nutritional, and metabolic diseases"
+      },
+      {
+        name: "Atherosclerotic heart disease of native coronary artery without angina pectoris",
+        code: "I25.10",
+        category: "Diseases of the circulatory system"
+      },
+      {
+        name: "Asthma, uncomplicated, unspecified",
+        code: "J45.909",
+        category: "Diseases of the respiratory system"
+      },
+      {
+        name: "Low back pain",
+        code: "M54.5",
+        category: "Diseases of the musculoskeletal system and connective tissue"
+      },
+      {
+        name: "Chronic kidney disease, unspecified",
+        code: "N18.9",
+        category: "Diseases of the genitourinary system"
+      },
+      {
+        name: "Chest pain, unspecified",
+        code: "R07.9",
+        category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+      },
+      {
+        name: "Fracture of shaft of radius, right arm, initial encounter for closed fracture",
+        code: "S52.501A",
+        category: "Injury, poisoning, and certain other consequences of external causes"
+      },
+      {
+        name: "Encounter for gynecological examination (general) (routine) without abnormal findings",
+        code: "Z01.419",
+        category: "Factors influencing health status and contact with health services"
+      },
+    {
+      "name": "Acute sinusitis",
+      "code": "J01.0",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Allergic rhinitis due to pollen",
+      "code": "J30.1",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Alzheimer's disease",
+      "code": "G30.9",
+      "category": "Diseases of the nervous system"
+    },
+    {
+      "name": "Anxiety disorder, unspecified",
+      "code": "F41.9",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Appendicitis, unspecified",
+      "code": "K37",
+      "category": "Diseases of the digestive system"
+    },
+    {
+      "name": "Atrial fibrillation",
+      "code": "I48.0",
+      "category": "Diseases of the circulatory system"
+    },
+    {
+      "name": "Attention-deficit hyperactivity disorder, combined type",
+      "code": "F90.2",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Autism spectrum disorder, level 1",
+      "code": "F84.0",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Bacterial pneumonia, unspecified",
+      "code": "J15.9",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Benign prostatic hyperplasia without lower urinary tract symptoms",
+      "code": "N40.0",
+      "category": "Diseases of the genitourinary system"
+    },
+    {
+      "name": "Bipolar disorder, current episode manic without psychotic features",
+      "code": "F31.10",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Breast cancer, unspecified",
+      "code": "C50.919",
+      "category": "Neoplasms"
+    },
+    {
+      "name": "Cataract, unspecified eye",
+      "code": "H25.9",
+      "category": "Diseases of the eye and adnexa"
+    },
+    {
+      "name": "Cellulitis of face",
+      "code": "L03.211",
+      "category": "Diseases of the skin and subcutaneous tissue"
+    },
+    {
+      "name": "Cervicalgia",
+      "code": "M54.2",
+      "category": "Diseases of the musculoskeletal system and connective tissue"
+    },
+    {
+      "name": "Chronic obstructive pulmonary disease, unspecified",
+      "code": "J44.9",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Chronic sinusitis",
+      "code": "J32.9",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Contact dermatitis due to cosmetics",
+      "code": "L23.6",
+      "category": "Diseases of the skin and subcutaneous tissue"
+    },
+    {
+      "name": "Coronary atherosclerosis of native coronary artery",
+      "code": "I25.10",
+      "category": "Diseases of the circulatory system"
+    },
+    {
+      "name": "Crohn's disease, unspecified",
+      "code": "K50.90",
+      "category": "Diseases of the digestive system"
+    },
+    {
+      "name": "Deep vein thrombosis, lower extremity",
+      "code": "I82.409",
+      "category": "Diseases of the circulatory system"
+    },
+    {
+      "name": "Depressive disorder, unspecified",
+      "code": "F32.9",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Diabetic retinopathy",
+      "code": "E11.319",
+      "category": "Endocrine, nutritional, and metabolic diseases"
+    },
+    {
+      "name": "Diverticular disease of large intestine without perforation or abscess without bleeding",
+      "code": "K57.90",
+      "category": "Diseases of the ...."
+    },
+    {
+      "name": "Drug overdose, unspecified",
+      "code": "T50.901A",
+      "category": "Injury, poisoning, and certain other consequences of external causes"
+    },
+    {
+      "name": "Epilepsy, unspecified",
+      "code": "G40.909",
+      "category": "Diseases of the nervous system"
+    },
+    {
+      "name": "Fibromyalgia",
+      "code": "M79.7",
+      "category": "Diseases of the musculoskeletal system and connective tissue"
+    },
+    {
+      "name": "Gastroesophageal reflux disease without esophagitis",
+      "code": "K21.9",
+      "category": "Diseases of the digestive system"
+    },
+    {
+      "name": "Glaucoma, unspecified",
+      "code": "H40.9",
+      "category": "Diseases of the eye and adnexa"
+    },
+    {
+      "name": "Gout, unspecified",
+      "code": "M10.9",
+      "category": "Diseases of the musculoskeletal system and connective tissue"
+    },
+    {
+      "name": "Hepatitis C, chronic",
+      "code": "B18.2",
+      "category": "Certain infectious and parasitic diseases"
+    },
+    {
+      "name": "Herpes simplex without complication",
+      "code": "B00.9",
+      "category": "Certain infectious and parasitic diseases"
+    },
+    {
+      "name": "Hypertensive heart disease without heart failure",
+      "code": "I11.9",
+      "category": "Diseases of the circulatory system"
+    },
+    {
+      "name": "Hypothyroidism, unspecified",
+      "code": "E03.9",
+      "category": "Endocrine, nutritional, and metabolic diseases"
+    },
+    {
+      "name": "Inguinal hernia, unilateral or unspecified, without obstruction or gangrene",
+      "code": "K40.90",
+      "category": "Diseases of the digestive system"
+    },
+    {
+      "name": "Insomnia, unspecified",
+      "code": "F51.9",
+      "category": "Mental, Behavioral, and Neurodevelopmental disorders"
+    },
+    {
+      "name": "Iron deficiency anemia, unspecified",
+      "code": "D50.9",
+      "category": "Diseases of the blood and blood-forming organs"
+    },
+    {
+      "name": "Laryngitis, unspecified",
+      "code": "J04.0",
+      "category": "Diseases of the respiratory system"
+    },
+    {
+      "name": "Lateral epicondylitis, bilateral",
+      "code": "M77.12",
+      "category": "Diseases of the musculoskeletal system and connective tissue"
+    },
+    {
+      "name": "Lupus erythematosus, unspecified",
+      "code": "M32.9",
+      "category": "Diseases of the musculoskeletal system and connective tissue"
+    },
+    {
+      "name": "Migraine without aura, not intractable",
+      "code": "G43.109",
+      "category": "Diseases of the nervous system"
+    },
+    {
+      "name": "Multiple sclerosis, unspecified",
+      "code": "G35",
+      "category": "Diseases of the nervous system"
+    },
+    {
+      "name": "Nephrolithiasis, unspecified",
+      "code": "N20.0",
+      "category": "Diseases of the genitourinary system"
+    },
+    {
+    name: "Acute otitis media, unspecified ear",
+    code: "H66.90",
+    category: "Diseases of the ear and mastoid process"
+  },
+  {
+    name: "Acute pancreatitis",
+    code: "K85.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Acute upper respiratory infection, unspecified",
+    code: "J06.9",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Allergic conjunctivitis, unspecified",
+    code: "H10.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Anemia, unspecified",
+    code: "D64.9",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Ankle sprain",
+    code: "S93.409A",
+    category: "Injury, poisoning, and certain other consequences of external causes"
+  },
+  {
+    name: "Anxiety disorder, social",
+    code: "F40.10",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Arthritis, unspecified",
+    code: "M13.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Atrial flutter",
+    code: "I48.2",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Bacterial meningitis, unspecified",
+    code: "G00.9",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Bacterial vaginosis",
+    code: "N76.0",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Bell's palsy",
+    code: "G51.0",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Bladder cancer, unspecified",
+    code: "C67.9",
+    category: "Neoplasms"
+  },
+  {
+    name: "Bronchitis, not specified as acute or chronic",
+    code: "J40",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Calcium pyrophosphate deposition disease",
+    code: "M11.10",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Carpal tunnel syndrome, unspecified upper limb",
+    code: "G56.00",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Cataract extraction status",
+    code: "Z98.1",
+    category: "Factors influencing health status and contact with health services"
+  },
+  {
+    name: "Celiac disease",
+    code: "K90.0",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Chronic myeloid leukemia, BCR/ABL-positive",
+    code: "C92.10",
+    category: "Neoplasms"
+  },
+  {
+    name: "Chronic pain syndrome",
+    code: "G89.4",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Conjunctivitis due to contact lenses",
+    code: "H10.13",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Contact dermatitis due to food",
+    code: "L23.8",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Corneal opacity, unspecified",
+    code: "H17.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Cystic fibrosis with pulmonary manifestations",
+    code: "E84.0",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Dehydration",
+    code: "E86.0",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Dementia with Lewy bodies",
+    code: "G31.83",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Dental caries, unspecified",
+    code: "K02.9",
+    category: "Diseases of the oral cavity, salivary glands, and jaws"
+  },
+  {
+    name: "Depersonalization-derealization disorder",
+    code: "F48.1",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Diabetes mellitus due to underlying condition with mild nonproliferative diabetic retinopathy without macular edema, unspecified",
+    code: "E08.359",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Drug-induced parkinsonism",
+    code: "G21.11",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Dysmenorrhea, unspecified",
+    code: "N94.6",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Eating disorder, unspecified",
+    code: "F50.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Encephalopathy, unspecified",
+    code: "G93.40",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Essential (primary) hypertension",
+    code: "I10",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Exposure to environmental tobacco smoke",
+    code: "Z77.22",
+    category: "Factors influencing health status and contact with health services"
+  },
+  {
+    name: "Factitious disorder imposed on self",
+    code: "F68.A",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Familial hypercholesterolemia",
+    code: "E78.01",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Female infertility",
+    code: "N97.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Fibrous dysplasia of bone",
+    code: "M85.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Foreign body in esophagus",
+    code: "T18.1",
+    category: "Injury, poisoning, and certain other consequences of external causes"
+  },
+  {
+    name: "Functional quadriplegia",
+    code: "R53.2",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Gastrointestinal hemorrhage, unspecified",
+    code: "K92.2",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Genital herpes, unspecified",
+    code: "A60.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Goiter, unspecified",
+    code: "E04.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Hallucinogen-related disorder, unspecified",
+    code: "F16.90",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Headache",
+    code: "R51",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Hearing loss, unspecified",
+    code: "H91.9",
+    category: "Diseases of the ear and mastoid process"
+  },
+  {
+    name: "Heartburn",
+    code: "R12",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Hemorrhoids, unspecified",
+    code: "K64.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Hepatitis B without delta-agent",
+    code: "B18.1",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Hereditary hemochromatosis",
+    code: "E83.110",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Histrionic personality disorder",
+    code: "F60.4",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Hypertension urgency",
+    code: "I16.0",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Hypoparathyroidism",
+    code: "E20.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Impetigo, unspecified",
+    code: "L01.00",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Inflammatory polyarthropathy, unspecified",
+    code: "M14.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Insulin-dependent diabetes mellitus, with diabetic nephropathy",
+    code: "E10.21",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Intestinal malabsorption, unspecified",
+    code: "K90.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Irritable bowel syndrome with diarrhea",
+    code: "K58.0",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Juvenile idiopathic arthritis, unspecified",
+    code: "M08.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Keratitis, unspecified",
+    code: "H16.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Lactose intolerance, unspecified",
+    code: "E73.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Latent tuberculosis infection, unspecified",
+    code: "Z11.1",
+    category: "Factors influencing health status and contact with health services"
+  },
+  {
+    name: "Lead poisoning, unspecified",
+    code: "T56.9X1A",
+    category: "Injury, poisoning, and certain other consequences of external causes"
+  },
+  {
+    name: "Leukemia, unspecified, not having achieved remission",
+    code: "C91.90",
+    category: "Neoplasms"
+  },
+  {
+    name: "Lichen planus, unspecified",
+    code: "Lichen planus, unspecified",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Low testosterone level",
+    code: "E29.1",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Major depressive disorder, single episode, unspecified",
+    code: "F32.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Male erectile dysfunction",
+    code: "N52.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Mastitis, unspecified",
+    code: "N61",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Medial epicondylitis, right elbow",
+    code: "M77.11",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Metabolic syndrome",
+    code: "E88.81",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Migraine with aura, not intractable",
+    code: "G43.109",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Mitral valve stenosis",
+    code: "I05.0",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Myocardial infarction, unspecified",
+    code: "I21.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Narcolepsy",
+    code: "G47.4",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Nausea with vomiting, unspecified",
+    code: "R11.2",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Neonatal jaundice, unspecified",
+    code: "P59.9",
+    category: "Certain conditions originating in the perinatal period"
+  },
+  {
+    name: "Neuropathy, unspecified",
+    code: "G62.9",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Nonrheumatic aortic (valve) stenosis",
+    code: "I35.0",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Obesity, unspecified",
+    code: "E66.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Obsessive-compulsive disorder",
+    code: "F42",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Opioid dependence",
+    code: "F11.20",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Otitis externa, unspecified",
+    code: "H60.90",
+    category: "Diseases of the ear and mastoid process"
+  },
+  {
+    name: "Overweight",
+    code: "Z68.30",
+    category: "Factors influencing health status and contact with health services"
+  },
+  {
+    name: "Panic disorder without agoraphobia",
+    code: "F41.0",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Paroxysmal supraventricular tachycardia",
+    code: "I47.1",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Patellofemoral pain syndrome",
+    code: "M76.97",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Pelvic inflammatory disease",
+    code: "N70.93",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Pericardial effusion, unspecified",
+    code: "I31.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Peripheral neuropathy, unspecified",
+    code: "G62.9",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Pharyngitis",
+    code: "J02.9",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Pneumococcal pneumonia, unspecified",
+    code: "J13",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Polycystic ovarian syndrome",
+    code: "E28.2",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Posttraumatic stress disorder",
+    code: "F43.10",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Primary insomnia",
+    code: "G47.00",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Prostatitis, unspecified",
+    code: "N41.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Psoriasis vulgaris",
+    code: "L40.0",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Pulmonary embolism without acute cor pulmonale",
+    code: "I26.99",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Raynaud's syndrome",
+    code: "I73.00",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Recurrent major depressive disorder, in partial remission",
+    code: "F33.42",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Renal colic, unspecified",
+    code: "N23",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Restless legs syndrome",
+    code: "G25.81",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Rheumatoid arthritis, unspecified",
+    code: "M06.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Rosacea",
+    code: "L71.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Salmonella infection, unspecified",
+    code: "A02.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Scoliosis, unspecified",
+    code: "M41.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Seborrheic dermatitis",
+    code: "L21.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Shoulder impingement syndrome, right shoulder",
+    code: "M75.41",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Sickle-cell disease, unspecified",
+    code: "D57.319",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Sleep apnea, unspecified",
+    code: "G47.30",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Spinal stenosis, lumbar region without neurogenic claudication",
+    code: "M48.06",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Streptococcal sore throat",
+    code: "J02.0",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Substance abuse, unspecified",
+    code: "F19.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Syncope and collapse, unspecified",
+    code: "R55",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Testicular torsion, unspecified",
+    code: "N44.0",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Tourette's disorder",
+    code: "F95.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Transient global amnesia",
+    code: "G45.4",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Trichomoniasis",
+    code: "A59.00",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Tuberculosis of lung, unspecified",
+    code: "A15.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Urinary incontinence, unspecified",
+    code: "N39.498",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Urticaria, unspecified",
+    code: "L50.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Varicose veins of unspecified lower extremity with inflammation",
+    code: "I83.91",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Viral hepatitis C without hepatic coma",
+    code: "B17.10",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Vitamin D deficiency, unspecified",
+    code: "E55.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Vulvovaginal candidiasis",
+    code: "B37.3",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Whiplash injury of neck, unspecified",
+    code: "S13.4XXA",
+    category: "Injury, poisoning, and certain other consequences of external causes"
+  },
+  {
+    name: "Xerostomia",
+    code: "K11.7",
+    category: "Diseases of the oral cavity, salivary glands, and jaws"
+  },
+  {
+    name: "Yellow fever",
+    code: "A95",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Achalasia of esophagus",
+    code: "K22.0",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Acute kidney failure, unspecified",
+    code: "N17.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Acute upper respiratory infection, unspecified",
+    code: "J06.9",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Addison's disease",
+    code: "E27.1",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Agoraphobia without panic disorder",
+    code: "F40.00",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Anemia, unspecified",
+    code: "D64.9",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Ankylosing spondylitis, unspecified",
+    code: "M45.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Aortic aneurysm, unspecified",
+    code: "I71.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Aplastic anemia, unspecified",
+    code: "D61.9",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Arteriosclerosis of extremities",
+    code: "I70.20",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Balanitis, unspecified",
+    code: "N48.1",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Basal cell carcinoma of skin",
+    code: "C44.91",
+    category: "Neoplasms"
+  },
+  {
+    name: "Biliary calculus with acute cholecystitis",
+    code: "K80.00",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Blepharitis",
+    code: "H01.00",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Borderline personality disorder",
+    code: "F60.3",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Brucellosis, unspecified",
+    code: "A23.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Bulimia nervosa",
+    code: "F50.2",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Cardiomyopathy, unspecified",
+    code: "I42.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Carpal tunnel syndrome, unspecified upper limb",
+    code: "G56.00",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Celiac disease",
+    code: "K90.0",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Chlamydia trachomatis infection, unspecified",
+    code: "A74.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Cholera, unspecified",
+    code: "A00.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Chronic lymphocytic leukemia of B-cell type, not having achieved remission",
+    code: "C91.10",
+    category: "Neoplasms"
+  },
+  {
+    name: "Chronic migraine without aura",
+    code: "G43.709",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Chronic periodontitis, unspecified",
+    code: "K05.30",
+    category: "Diseases of the oral cavity, salivary glands, and jaws"
+  },
+  {
+    name: "Condyloma acuminatum of anus",
+    code: "A63.0",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Conjunctivitis, unspecified",
+    code: "H10.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Cough",
+    code: "R05",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Cystic fibrosis with pulmonary manifestations",
+    code: "E84.11",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Dental caries",
+    code: "K02.9",
+    category: "Diseases of the oral cavity, salivary glands, and jaws"
+  },
+  {
+    name: "Dermatitis, unspecified",
+    code: "L30.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Diabetes mellitus without complications, type I [juvenile type], not stated as uncontrolled",
+    code: "E10.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Disorder of bone density and structure, unspecified",
+    code: "M85.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Diverticulitis of small intestine without perforation or abscess without bleeding",
+    code: "K57.30",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Dyspareunia, unspecified",
+    code: "N94.1",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Eating disorder, unspecified",
+    code: "F50.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Encephalopathy, unspecified",
+    code: "G93.40",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Endometriosis, unspecified",
+    code: "N80.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Eosinophilic esophagitis",
+    code: "K20.0",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Essential tremor",
+    code: "G25.0",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Exposure to radiation, unspecified",
+    code: "Z77.9",
+    category: "Factors influencing health status and contact with health services"
+  },
+  {
+    name: "Factitious disorder",
+    code: "F68.10",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Female infertility, unspecified",
+    code: "N97.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Fibroadenoma of breast",
+    code: "D24.1",
+    category: "Neoplasms"
+  },
+  {
+    name: "Fibrocystic breast disease",
+    code: "N60.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Follicular lymphoma, unspecified, extranodal and solid organ sites",
+    code: "C82.70",
+    category: "Neoplasms"
+  },
+  {
+    name: "Functional quadriplegia",
+    code: "R53.2",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Gingivitis, unspecified",
+    code: "K05.10",
+    category: "Diseases of the oral cavity, salivary glands, and jaws"
+  },
+  {
+    name: "Gonorrhea, unspecified",
+    code: "A54.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Gouty arthropathy, unspecified",
+    code: "M1A.90",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Hallucinogen abuse, uncomplicated",
+    code: "F16.90",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Hashimoto's thyroiditis",
+    code: "E06.3",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Hemorrhoids, unspecified",
+    code: "K64.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Hidradenitis suppurativa",
+    code: "L73.2",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Human immunodeficiency virus [HIV] disease, unspecified",
+    code: "B20",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Hydrocele, unspecified",
+    code: "N43.3",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Hyperlipidemia, unspecified",
+    code: "E78.5",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Hypersomnia, unspecified",
+    code: "G47.10",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Hypertensive crisis, unspecified",
+    code: "I16.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Hyperventilation",
+    code: "R06.4",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Hypochondriasis",
+    code: "F45.21",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Hypogonadism, male, unspecified",
+    code: "E29.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Hypoparathyroidism, unspecified",
+    code: "E20.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Ichthyosis, unspecified",
+    code: "Q80.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Impetigo, unspecified",
+    code: "L01.00",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Influenza due to other identified influenza virus with pneumonia",
+    code: "J09.X1",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Insulin resistance syndrome, unspecified",
+    code: "E88.81",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Intervertebral disc disorder with myelopathy, lumbar region",
+    code: "M51.16",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Juvenile osteoporosis",
+    code: "M81.0",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Keratitis, unspecified",
+    code: "H16.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Knee pain",
+    code: "M25.569",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Lichen planus",
+    code: "Lichen planus",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Lipoma of skin and subcutaneous tissue of trunk",
+    code: "D17.3",
+    category: "Neoplasms"
+  },
+  {
+    name: "Lung abscess",
+    code: "J85.1",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Malignant melanoma of lip",
+    code: "C43.21",
+    category: "Neoplasms"
+  },
+  {
+    name: "Malnutrition, unspecified",
+    code: "E46",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Mastitis, unspecified",
+    code: "N61",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Meningitis due to Streptococcus pneumoniae",
+    code: "G00.1",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Mental and behavioral disorders due to use of alcohol, withdrawal state with delirium",
+    code: "F10.231",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Metabolic syndrome",
+    code: "E88.81",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Mood [affective] disorders",
+    code: "F30.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Myocardial infarction, unspecified",
+    code: "I21.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Necrotizing fasciitis",
+    code: "M72.6",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Neoplasm of uncertain behavior of skin",
+    code: "D48.5",
+    category: "Neoplasms"
+  },
+  {
+    name: "Nodular acne",
+    code: "L70.0",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Noninfective gastroenteritis and colitis, unspecified",
+    code: "K52.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Obesity, unspecified",
+    code: "E66.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Obsessive-compulsive disorder",
+    code: "F42",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Oliguria",
+    code: "R34",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Ophthalmoplegia, unspecified",
+    code: "H51.9",
+    category: "Diseases of the eye and adnexa"
+  },
+  {
+    name: "Opioid dependence with withdrawal",
+    code: "F11.23",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Osteoarthritis, unspecified",
+    code: "M15.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Ovarian cyst",
+    code: "N83.20",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Pancreatitis, unspecified",
+    code: "K85.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Paranoia",
+    code: "F22",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Pelvic inflammatory disease",
+    code: "N70.90",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Pericarditis, unspecified",
+    code: "I30.9",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Personality disorder, unspecified",
+    code: "F60.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Peyronie's disease",
+    code: "N48.6",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Pilonidal sinus without abscess",
+    code: "L05.01",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Pneumonia due to Mycoplasma pneumoniae",
+    code: "J15.7",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Polyneuropathy, unspecified",
+    code: "G62.9",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Posttraumatic stress disorder",
+    code: "F43.10",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Preeclampsia, unspecified, second trimester",
+    code: "O14.12",
+    category: "Pregnancy, childbirth, and the puerperium"
+  },
+  {
+    name: "Prostatitis, unspecified",
+    code: "N41.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Pruritus, unspecified",
+    code: "L29.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Psoriasis, unspecified",
+    code: "L40.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Pulmonary embolism without acute cor pulmonale",
+    code: "I26.90",
+    category: "Diseases of the circulatory system"
+  },
+  {
+    name: "Rectal hemorrhage",
+    code: "K62.5",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Renal colic, unspecified",
+    code: "N23",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Restless legs syndrome",
+    code: "G25.81",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Retrograde ejaculation",
+    code: "N53.11",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Rheumatoid arthritis, unspecified",
+    code: "M06.9",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Rosacea",
+    code: "L71.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Salmonella infection, unspecified",
+    code: "A02.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Sarcoidosis, unspecified",
+    code: "D86.9",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Schizophrenia",
+    code: "F20.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Sciatica, unspecified side",
+    code: "M54.30",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Seborrheic dermatitis, unspecified",
+    code: "L21.9",
+    category: "Diseases of the skin and subcutaneous tissue"
+  },
+  {
+    name: "Seizure disorder, unspecified, intractable, without status epilepticus",
+    code: "G40.909",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Shoulder pain",
+    code: "M25.511",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Sickle-cell anemia",
+    code: "D57.00",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Sleep apnea, unspecified",
+    code: "G47.30",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Spinal stenosis, lumbar region without neurogenic claudication",
+    code: "M48.06",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Streptococcal sore throat",
+    code: "J02.0",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Substance abuse",
+    code: "F11.9",
+    category: "Mental, Behavioral, and Neurodevelopmental disorders"
+  },
+  {
+    name: "Syncope and collapse",
+    code: "R55",
+    category: "Symptoms, signs, and abnormal clinical and laboratory findings, not elsewhere classified"
+  },
+  {
+    name: "Tension-type headache, unspecified, intractable",
+    code: "G44.209",
+    category: "Diseases of the nervous system"
+  },
+  {
+    name: "Thrombocytopenia, unspecified",
+    code: "D69.6",
+    category: "Diseases of the blood and blood-forming organs"
+  },
+  {
+    name: "Tonsillitis, unspecified",
+    code: "J03.90",
+    category: "Diseases of the respiratory system"
+  },
+  {
+    name: "Trichomoniasis, unspecified",
+    code: "A59.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Tuberculosis of respiratory system, unspecified",
+    code: "A15.9",
+    category: "Certain infectious and parasitic diseases"
+  },
+  {
+    name: "Ulcerative colitis, unspecified",
+    code: "K51.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Umbilical hernia, without obstruction or gangrene",
+    code: "K42.9",
+    category: "Diseases of the digestive system"
+  },
+  {
+    name: "Urethral stricture, unspecified",
+    code: "N35.9",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Urinary incontinence, unspecified",
+    code: "N39.498",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Vaginitis, unspecified",
+    code: "N76.0",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Vitamin D deficiency, unspecified",
+    code: "E55.9",
+    category: "Endocrine, nutritional, and metabolic diseases"
+  },
+  {
+    name: "Vulvodynia",
+    code: "N94.810",
+    category: "Diseases of the genitourinary system"
+  },
+  {
+    name: "Wrist drop, unspecified",
+    code: "G56.00",
+    category: "Diseases of the musculoskeletal system and connective tissue"
+  },
+  {
+    name: "Yellow fever",
+    code: "A95",
+    category: "Certain infectious and parasitic diseases"
+  },
+
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const searchResultsContainer = document.getElementById("searchResults");
+
+    // Function to perform search
+    function performSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const results = diseases.filter(disease => disease.name.toLowerCase().includes(searchTerm));
+      displaySearchResults(results);
+    }
+
+    // Function to display search results
+    function displaySearchResults(results) {
+      searchResultsContainer.innerHTML = "";
+
+      if (results.length === 0) {
+        searchResultsContainer.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+
+      results.forEach(result => {
+        const resultElement = document.createElement("div");
+        resultElement.classList.add("result");
+        resultElement.innerHTML = `
+          <h4>${result.name}</h4>
+          <p>ICD-10 Code: ${result.code}</p>
+          <p>Category: ${result.category}</p>
+        `;
+        searchResultsContainer.appendChild(resultElement);
+      });
+    }
+
+    // Event listener for search input
+    searchInput.addEventListener("input", performSearch);
+  </script>
+</body>
+</html>

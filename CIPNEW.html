@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #container {
+            position: relative;
+            width: 660px; /* Adjusted the container width to accommodate larger buttons and space between them */
+            height: 660px; /* Adjusted the container height to accommodate larger buttons and space between them */
+        }
+
+        .button {
+            position: absolute;
+            width: 300px; /* Adjusted button width */
+            height: 300px; /* Adjusted button height */
+            font-size: 24px; /* Adjusted font size for better visibility */
+            text-align: center;
+            line-height: 300px;
+            border-radius:150px;
+            text-decoration: none;
+            color: #fff;
+            border: 3px solid #333;
+            background-color: #3498db;
+            cursor: pointer;
+        }
+
+        #button1 { top: 0; left: 0; }
+        #button2 { top: 0; right: 0; }
+        #button3 { bottom: 0; left: 0; }
+        #button4 { bottom: 0; right: 0; }
+
+        /* Added margin between buttons */
+        #button1 { margin-right: 10px; margin-bottom: 10px; }
+        #button2 { margin-left: 10px; margin-bottom: 10px; }
+        #button3 { margin-right: 10px; margin-top: 10px; }
+        #button4 { margin-left: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <a href="page1.html" class="button" id="button1">Doctor search</a>
+        <a href="Icd10.html" class="button" id="button2">ICD-10 info</a>
+        <a href="insurance.html" class="button" id="button3">Insurance search</a>
+        <a href="page4.html" class="button" id="button4">FaQ's</a>
+    </div>
+
+    <script>
+        // You can add JavaScript code here if needed
+    </script>
+</body>
+</html>

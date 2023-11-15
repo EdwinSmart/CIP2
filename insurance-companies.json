@@ -1,0 +1,19 @@
+[
+    {
+        "name": "XYZ Insurance",
+        "phoneNumber": "555-9876",
+        "email": "info@xyzinsurance.com",
+        "inpatientLimit": "$10,000",
+        "outpatientLimit": "$5,000",
+        "preAuthorizationServices": ["Surgery", "MRI", "Specialist Consultation"]
+    },
+    {
+        "name": "ABC Insurance",
+        "phoneNumber": "555-1234",
+        "email": "info@abcinsurance.com",
+        "inpatientLimit": "$15,000",
+        "outpatientLimit": "$7,000",
+        "preAuthorizationServices": ["Hospitalization", "Physical Therapy"]
+    }
+    // Add more insurance company data here...
+]

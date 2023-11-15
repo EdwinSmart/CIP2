@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    color: #007BFF;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 5px;
+    margin: 10px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#results {
+    margin: 20px;
+    text-align: left;
+    font-weight: bold;
+}
+/* Add styles for the scheme search bar and results */
+.search-schemes {
+    width: 100%;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.scheme-results {
+    margin-top: 10px;
+    text-align: left;
+}
+ 
+.company-name {
+
+padding: 20px;
+
+}

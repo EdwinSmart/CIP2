@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #chat-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow-y: scroll;
+            max-height: 300px;
+            background-color: #fff;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .user {
+            color: #1a1a1a;
+        }
+
+        .bot {
+            color: #4CAF50;
+        }
+    </style>
+    <title>Hospital Chatbot</title>
+</head>
+<body>
+    <div id="chat-container"></div>
+    <input type="text" id="user-input" placeholder="Type your question...">
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatContainer = document.getElementById("chat-container");
+            const userInput = document.getElementById("user-input");
+
+            function appendMessage(message, sender) {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", sender);
+                messageElement.innerHTML = message;
+                chatContainer.appendChild(messageElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to the bottom
+            }
+
+            function botResponse(userQuestion) {
+                let response = "I'm sorry, I couldn't understand your question.";
+
+                if (userQuestion.includes("doctor") && userQuestion.includes("location")) {
+                    response = "Our doctors are located on different floors. Cardiologists are on the 2nd floor, pediatricians on the 3rd floor, and orthopedic specialists on the 4th floor.";
+                } else if (userQuestion.includes("doctor") && userQuestion.includes("specialty")) {
+                    response = "We have a range of specialists, including cardiologists, pediatricians, orthopedic surgeons, neurologists, and more.";
+                } else if (userQuestion.includes("insurance")) {
+                    response = "We accept a variety of insurance plans, including Blue Cross, Aetna, Cigna, and UnitedHealthcare. Please provide the name of your insurance for more details.";
+                } else if (userQuestion.includes("appointment") && userQuestion.includes("schedule")) {
+                    response = "To schedule an appointment, you can call our front desk at (123) 456-7890 or use our online appointment booking system on our website.";
+                } else if (userQuestion.includes("emergency") && userQuestion.includes("procedure")) {
+                    response = "In case of a medical emergency, please call 911 immediately. If you have specific questions about emergency procedures at our hospital, feel free to ask.";
+                }
+                // Add more conditions for additional inputs and outputs
+
+                return response;
+            }
+
+            function handleUserInput() {
+                const userQuestion = userInput.value;
+
+                if (userQuestion.trim() === "") return;
+
+                appendMessage(`<strong>You:</strong> ${userQuestion}`, "user");
+
+                const botAnswer = botResponse(userQuestion);
+                appendMessage(`<strong>Bot:</strong> ${botAnswer}`, "bot");
+
+                userInput.value = ""; // Clear the user input field
+            }
+
+            userInput.addEventListener("keyup", function(event) {
+                if (event.key === "Enter") {
+                    handleUserInput();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
